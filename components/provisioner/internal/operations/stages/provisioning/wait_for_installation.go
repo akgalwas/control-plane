@@ -1,7 +1,6 @@
 package provisioning
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 	"github.com/kyma-project/control-plane/components/provisioner/internal/model"
 	"github.com/kyma-project/control-plane/components/provisioner/internal/operations"
 	"github.com/kyma-project/control-plane/components/provisioner/internal/util/k8s"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -48,12 +48,6 @@ func (s *WaitForInstallationStep) Run(cluster model.Cluster, _ model.Operation, 
 
 	installationState, err := s.installationClient.CheckInstallationState(k8sConfig)
 	if err != nil {
-		installErr := installationSDK.InstallationError{}
-		if errors.As(err, &installErr) {
-			logger.Warnf("installation error occurred: %s", installErr.Error())
-			return operations.StageResult{Stage: s.Name(), Delay: 30 * time.Second}, nil
-		}
-
 		return operations.StageResult{}, fmt.Errorf("error: failed to check installation state: %s", err.Error())
 	}
 

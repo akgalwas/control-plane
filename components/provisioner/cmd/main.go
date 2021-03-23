@@ -175,6 +175,8 @@ func main() {
 	dbsFactory := dbsession.NewFactory(connection)
 	installationService := installation.NewInstallationService(cfg.ProvisioningTimeout.Installation, installationHandlerConstructor, cfg.Gardener.ClusterCleanupResourceSelector)
 
+	parallelInstallationService := installation.NewParallelInstallationService()
+
 	directorClient, err := newDirectorClient(cfg)
 	exitOnError(err, "Failed to initialize Director client")
 
@@ -185,7 +187,7 @@ func main() {
 	provisioningQueue := queue.CreateProvisioningQueue(
 		cfg.ProvisioningTimeout,
 		dbsFactory,
-		installationService,
+		parallelInstallationService,
 		runtimeConfigurator,
 		provisioningStages.NewCompassConnectionClient,
 		directorClient,

@@ -30,5 +30,8 @@ WORKDIR /app
 
 COPY --from=builder /app /app
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+ADD https://github.com/kyma-project/kyma/archive/master.zip /app/kyma-source/
+RUN sh -c 'unzip -q "/app/kyma-source/master.zip"'
+RUN mkdir /app/files
 
 CMD ["/app/main"]

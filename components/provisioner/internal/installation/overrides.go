@@ -1,0 +1,117 @@
+package installation
+
+import (
+	"fmt"
+	"strconv"
+	"strings"
+
+	"github.com/kyma-project/control-plane/components/provisioner/internal/model"
+
+	"github.com/magiconair/properties"
+	"github.com/pkg/errors"
+)
+
+type OverrideBuilder interface {
+	AddOverrides(string, map[string]interface{}) error
+}
+
+func SetOverrides(ob OverrideBuilder, components []model.KymaComponentConfig, globalConfiguration model.Configuration) error {
+	for _, override := range convertToOverrides(components, globalConfiguration) {
+		keyValuePairs := properties.MustLoadString(override)
+		if keyValuePairs.Len() < 1 {
+			return errors.Errorf("key/value pair does not have the required amount of value")
+		}
+
+		// process key-value pair
+		for _, key := range keyValuePairs.Keys() {
+			value, ok := keyValuePairs.Get(key)
+			if !ok || value == "" {
+				return errors.Errorf("value for key %q not exist/is empty", key)
+			}
+
+			comp, overridesMap, err := convertToOverridesMap(key, value)
+			if err != nil {
+				return errors.Wrap(err, "while converting key/value to override map")
+			}
+
+			if err := ob.AddOverrides(comp, overridesMap); err != nil {
+				return errors.Wrapf(err, "while adding override for %s component", comp)
+			}
+		}
+	}
+	return nil
+}
+
+func convertToOverrides(components []model.KymaComponentConfig, globalConfiguration model.Configuration) []string {
+	overrides := make([]string, 0)
+
+	for _, component := range components {
+		name := component.Component
+		for _, ov := range component.Configuration.ConfigEntries {
+			var temp string
+			if isNumeric(ov.Value) || isBool(ov.Value) {
+				temp = "%s.%s=%s"
+			} else {
+				temp = "%s.%s='%s'"
+			}
+			overrides = append(overrides, fmt.Sprintf(temp, name, ov.Key, ov.Value))
+		}
+	}
+
+	for _, global := range globalConfiguration.ConfigEntries {
+		var temp string
+		if isNumeric(global.Value) || isBool(global.Value) {
+			temp = "%s=%s"
+		} else {
+			temp = "%s='%s'"
+		}
+		overrides = append(overrides, fmt.Sprintf(temp, global.Key, global.Value))
+	}
+
+	return overrides
+}
+
+func convertToOverridesMap(key, value string) (string, map[string]interface{}, error) {
+	var comp string
+	var latestOverrideMap map[string]interface{}
+
+	keyTokens := strings.Split(key, ".")
+	if len(keyTokens) < 2 {
+		return comp, latestOverrideMap, fmt.Errorf("override key must contain at least the chart name "+
+			"and one override: chart.override[.suboverride]=value (given was '%s=%s')", key, value)
+	}
+
+	// first token in key is the chart name
+	comp = keyTokens[0]
+
+	// use the remaining key-tokens to build the nested overrides map
+	// processing starts from last element to the beginning
+	for idx := range keyTokens[1:] {
+		overrideMap := make(map[string]interface{})     // current override-map
+		overrideName := keyTokens[len(keyTokens)-1-idx] // get last token element
+		if idx == 0 {
+			// this is the last key-token, use it value
+			overrideMap[overrideName] = value
+		} else {
+			// the latest override map has to become a sub-map of the current override-map
+			overrideMap[overrideName] = latestOverrideMap
+		}
+		//set the current override map as latest override map
+		latestOverrideMap = overrideMap
+	}
+
+	if len(latestOverrideMap) < 1 {
+		return comp, latestOverrideMap, fmt.Errorf("failed to extract overrides map from '%s=%s'", key, value)
+	}
+
+	return comp, latestOverrideMap, nil
+}
+
+func isNumeric(s string) bool {
+	_, err := strconv.ParseFloat(s, 64)
+	return err == nil
+}
+
+func isBool(s string) bool {
+	return s == "true" || s == "false"
+}

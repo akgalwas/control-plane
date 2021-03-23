@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/99designs/gqlgen v0.9.3
-	github.com/avast/retry-go v2.6.0+incompatible
+	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/gardener/gardener v1.10.1-0.20200903060046-8bed4ed6c257
 	github.com/gocraft/dbr/v2 v2.6.3
 	github.com/google/uuid v1.1.1
@@ -12,20 +12,24 @@ require (
 	github.com/kubernetes-sigs/service-catalog v0.3.0
 	github.com/kyma-incubator/compass/components/director v0.0.0-20200813093525-96b1a733a11b
 	github.com/kyma-incubator/hydroform/install v0.0.0-20210218125820-f7a76ec2075a
+	github.com/kyma-incubator/hydroform/parallel-install v0.0.0-20210315084829-c5b83b92b28c
 	github.com/kyma-project/kyma/components/compass-runtime-agent v0.0.0-20200902131640-31c29c8feb0c
 	github.com/kyma-project/kyma/components/kyma-operator v0.0.0-20201117100007-62918ff463e5
 	github.com/lib/pq v1.7.0
+	github.com/magiconair/properties v1.8.1
 	github.com/matryer/is v1.2.0
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.6.0
 	github.com/prometheus/client_model v0.2.0
 	github.com/prometheus/common v0.9.1
+	github.com/sanity-io/litter v1.5.0 // indirect
 	github.com/sirupsen/logrus v1.6.0
 	github.com/stretchr/testify v1.6.1
 	github.com/testcontainers/testcontainers-go v0.7.0
 	github.com/vektah/gqlparser v1.2.0
 	github.com/vrischmann/envconfig v1.3.0
+	gopkg.in/yaml.v2 v2.3.0
 	gotest.tools v2.2.0+incompatible
 	k8s.io/api v0.18.15
 	k8s.io/apiextensions-apiserver v0.18.15
