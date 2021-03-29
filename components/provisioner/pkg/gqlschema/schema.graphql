@@ -62,12 +62,39 @@ type ConfigEntry {
     secret: Boolean
 }
 
+type SecretPrerequisiteEntry {
+    key: String!        # Configuration property key
+    value: String!      # Configuration property value
+}
+
+
+type SecretPrerequisite {
+    resourceName: String!
+    entries: [SecretPrerequisiteEntry]
+}
+
+type GardenerCertificatePrerequisite {
+    resourceName: String!
+    secretName: String!
+    commonName: String!
+    dnsNames: [String]!
+}
+
+
+type PrerequisiteResources {
+    secrets: [SecretPrerequisite]
+    certificates: [GardenerCertificatePrerequisite]
+}
+
 type ComponentConfiguration {
     component: String!
     namespace: String!
     configuration: [ConfigEntry]
     sourceURL: String
+    prerequisite: Boolean
+    prerequisiteResources: PrerequisiteResources
 }
+
 
 type KymaConfig {
     version: String
@@ -228,13 +255,39 @@ input ConfigEntryInput {
     secret: Boolean     # Specifies if the property is confidential
 }
 
+
+input SecretPrerequisiteEntryInput {
+    key: String!        # Configuration property key
+    value: String!      # Configuration property value
+}
+
+input SecretPrerequisiteInput {
+    resourceName: String!
+    entries: [SecretPrerequisiteEntryInput]
+}
+
+input GardenerCertificatePrerequisiteInput {
+    resourceName: String!
+    secretName: String!
+    commonName: String!
+    dnsNames: [String]!
+}
+
+input PrerequisiteResourcesInput {
+    secrets: [SecretPrerequisiteInput]
+    certificates: [GardenerCertificatePrerequisiteInput]
+}
+
 input ComponentConfigurationInput {
     component: String!                    # Kyma component name
     namespace: String!                    # Namespace to which component should be installed
+    # TODO: come up with a some better name than prerequisite
     prerequisite: Boolean                 # Specifies if component is prerequisite or it is optional
     configuration: [ConfigEntryInput]     # Component specific configuration
     sourceURL: String                     # Custom URL for the source files of the given component
     conflictStrategy: ConflictStrategy  # Defines merging strategy if conflicts occur for component overrides
+
+    prerequisiteResources: PrerequisiteResourcesInput
 }
 
 input UpgradeRuntimeInput {
