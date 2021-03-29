@@ -77,7 +77,6 @@ type GardenerCertificatePrerequisite {
     resourceName: String!
     secretName: String!
     commonName: String!
-    dnsNames: [String]!
 }
 
 
@@ -270,7 +269,6 @@ input GardenerCertificatePrerequisiteInput {
     resourceName: String!
     secretName: String!
     commonName: String!
-    dnsNames: [String]!
 }
 
 input PrerequisiteResourcesInput {
