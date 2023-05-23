@@ -29,7 +29,7 @@ require (
 	github.com/kyma-project/control-plane/components/schema-migrator v0.0.0-20230222072933-f72a783494d6
 	github.com/kyma-project/kyma/components/kyma-operator v0.0.0-20220112092842-4cb8388cc0c6
 	github.com/kyma-project/runtime-watcher/listener v0.0.0-20230316093101-0a4bc4f5ef48
-	github.com/lib/pq v1.10.7
+	github.com/lib/pq v1.10.9
 	github.com/machinebox/graphql v0.2.3-0.20181106130121-3a9253180225
 	github.com/matryer/is v1.4.1
 	github.com/opencontainers/image-spec v1.1.0-rc2
