@@ -4,7 +4,7 @@ go 1.22.0
 
 require (
 	github.com/avast/retry-go/v4 v4.5.1
-	github.com/gardener/gardener v1.88.0
+	github.com/gardener/gardener v1.89.0
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/jellydator/ttlcache/v3 v3.2.0
