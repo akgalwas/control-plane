@@ -11,7 +11,7 @@ require (
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/stretchr/testify v1.8.4
 	github.com/vrischmann/envconfig v1.3.0
-	golang.org/x/oauth2 v0.16.0
+	golang.org/x/oauth2 v0.20.0
 	gopkg.in/yaml.v2 v2.4.0
 	k8s.io/apiserver v0.26.2
 	k8s.io/kubernetes v1.27.3
@@ -57,7 +57,6 @@ require (
 	golang.org/x/term v0.15.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.0.0-20220210224613-90d013bbcef8 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
